@@ -1,8 +1,9 @@
-import UserProfile from './components/UserProfile'; // Import the UserProfile component
+import Counter from './components/Counter'; // Import the Counter component
 import Header from './components/Header';
 import MainContent from './components/MainContent';
 import Footer from './components/Footer';
 import WelcomeMessage from './components/WelcomeMessage';
+import UserProfile from './components/UserProfile';
 import { useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
@@ -25,14 +26,13 @@ function App() {
       <Header />
       <WelcomeMessage />
       <MainContent />
-      <Footer />
-
-      {/* Use the UserProfile component with props */}
       <UserProfile 
         name="Alice" 
         age="25" 
         bio="Loves hiking and photography" 
       />
+      <Counter /> {/* Include the Counter component */}
+      <Footer />
 
       <h1>Vite + React</h1>
       <div className="card">
