@@ -1,54 +1,74 @@
-// src/components/FormikForm.jsx
+// src/components/formikForm.js
 import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-// Define the validation schema with Yup
-const validationSchema = Yup.object({
-  username: Yup.string().required('Username is required'),
-  email: Yup.string().email('Invalid email address').required('Email is required'),
-  password: Yup.string().min(6, 'Password must be at least 6 characters long').required('Password is required'),
-});
-
-const FormikForm = () => {
-  const handleSubmit = (values, { resetForm }) => {
-    // Simulate API call
-    console.log('User Registered:', values);
-    alert('Registration successful!');
-    resetForm();
-  };
+const RegistrationForm = () => {
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      username: Yup.string().required('Username is required!'),
+      email: Yup.string().email('Invalid email address').required('Email is required!'),
+      password: Yup.string().required('Password is required!'),
+    }),
+    onSubmit: (values) => {
+      console.log('User Registered:', values);
+      alert('Registration successful!');
+      formik.resetForm(); // Reset the form after successful submission
+    },
+  });
 
   return (
-    <Formik
-      initialValues={{ username: '', email: '', password: '' }}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {() => (
-        <Form>
-          <div>
-            <label>Username:</label>
-            <Field name="username" type="text" />
-            <ErrorMessage name="username" component="div" style={{ color: 'red' }} />
-          </div>
+    <form onSubmit={formik.handleSubmit}>
+      <div>
+        <label>Username:</label>
+        <input
+          type="text"
+          name="username"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.username}
+        />
+        {formik.touched.username && formik.errors.username ? (
+          <p style={{ color: 'red' }}>{formik.errors.username}</p>
+        ) : null}
+      </div>
 
-          <div>
-            <label>Email:</label>
-            <Field name="email" type="email" />
-            <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
-          </div>
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          name="email"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
+        />
+        {formik.touched.email && formik.errors.email ? (
+          <p style={{ color: 'red' }}>{formik.errors.email}</p>
+        ) : null}
+      </div>
 
-          <div>
-            <label>Password:</label>
-            <Field name="password" type="password" />
-            <ErrorMessage name="password" component="div" style={{ color: 'red' }} />
-          </div>
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          name="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+        />
+        {formik.touched.password && formik.errors.password ? (
+          <p style={{ color: 'red' }}>{formik.errors.password}</p>
+        ) : null}
+      </div>
 
-          <button type="submit">Register</button>
-        </Form>
-      )}
-    </Formik>
+      <button type="submit">Register</button>
+    </form>
   );
 };
 
-export default FormikForm;
+export default RegistrationForm;
