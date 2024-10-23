@@ -2,6 +2,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
+// Function to fetch posts from the API
 const fetchPosts = async () => {
   const response = await fetch('https://jsonplaceholder.typicode.com/posts');
   if (!response.ok) {
@@ -11,10 +12,11 @@ const fetchPosts = async () => {
 };
 
 const PostsComponent = () => {
-  const { data, error, isLoading, refetch } = useQuery('posts', fetchPosts);
+  // Using useQuery to fetch the posts
+  const { data, isError, isLoading, refetch, error } = useQuery('posts', fetchPosts);
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isError) return <div>Error: {error.message}</div>;
 
   return (
     <div>
