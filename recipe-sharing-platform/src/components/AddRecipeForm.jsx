@@ -4,41 +4,61 @@ const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [steps, setSteps] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({}); // Track form errors
+
+  // Validate form input
+  const validate = () => {
+    const newErrors = {};
+    if (!title.trim()) {
+      newErrors.title = 'Recipe title is required';
+    }
+    if (!ingredients.trim()) {
+      newErrors.ingredients = 'Ingredients are required';
+    } else {
+      const ingredientList = ingredients.split('\n');
+      if (ingredientList.length < 2) {
+        newErrors.ingredients = 'Please add at least two ingredients';
+      }
+    }
+    if (!steps.trim()) {
+      newErrors.steps = 'Preparation steps are required';
+    }
+    return newErrors;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Reset error
-    setError('');
+    const formErrors = validate(); // Perform validation
 
-    // Simple form validation
-    if (!title || !ingredients || !steps) {
-      setError('All fields are required');
-      return;
+    if (Object.keys(formErrors).length === 0) {
+      // If no validation errors, submit the form
+      console.log({
+        title,
+        ingredients: ingredients.split('\n'), // Split ingredients into an array
+        steps,
+      });
+
+      // Clear form after submission
+      setTitle('');
+      setIngredients('');
+      setSteps('');
+      setErrors({}); // Reset errors
+    } else {
+      // Set validation errors
+      setErrors(formErrors);
     }
-
-    const ingredientList = ingredients.split('\n');
-    if (ingredientList.length < 2) {
-      setError('Please add at least two ingredients.');
-      return;
-    }
-
-    // Normally, you would send the data to a server here
-    console.log({ title, ingredients, steps });
-
-    // Clear form after submission
-    setTitle('');
-    setIngredients('');
-    setSteps('');
   };
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Add a New Recipe</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {/* Display error message for title */}
+        {errors.title && <p className="text-red-500 mb-2">{errors.title}</p>}
         <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700 font-semibold mb-2">Recipe Title</label>
+          <label htmlFor="title" className="block text-gray-700 font-semibold mb-2">
+            Recipe Title
+          </label>
           <input
             type="text"
             id="title"
@@ -49,8 +69,12 @@ const AddRecipeForm = () => {
           />
         </div>
 
+        {/* Display error message for ingredients */}
+        {errors.ingredients && <p className="text-red-500 mb-2">{errors.ingredients}</p>}
         <div className="mb-4">
-          <label htmlFor="ingredients" className="block text-gray-700 font-semibold mb-2">Ingredients</label>
+          <label htmlFor="ingredients" className="block text-gray-700 font-semibold mb-2">
+            Ingredients
+          </label>
           <textarea
             id="ingredients"
             value={ingredients}
@@ -61,8 +85,12 @@ const AddRecipeForm = () => {
           />
         </div>
 
+        {/* Display error message for steps */}
+        {errors.steps && <p className="text-red-500 mb-2">{errors.steps}</p>}
         <div className="mb-4">
-          <label htmlFor="steps" className="block text-gray-700 font-semibold mb-2">Preparation Steps</label>
+          <label htmlFor="steps" className="block text-gray-700 font-semibold mb-2">
+            Preparation Steps
+          </label>
           <textarea
             id="steps"
             value={steps}
