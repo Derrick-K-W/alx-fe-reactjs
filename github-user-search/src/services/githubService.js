@@ -8,7 +8,7 @@ const fetchUserData = async (username) => {
     const response = await axios.get(`${GITHUB_API_URL}/${username}`);
     return response.data; // Return user data
   } catch (error) {
-    throw error; // Throw error to be handled in App.jsx
+    throw error; // Throw error to be handled in Search.jsx
   }
 };
 
