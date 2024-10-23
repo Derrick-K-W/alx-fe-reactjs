@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { fetchUserData } from '../services/githubService';
 
 const Search = () => {
-    const [query, setQuery] = useState('');
+    const [username, setUsername] = useState('');
+    const [location, setLocation] = useState('');
+    const [minRepos, setMinRepos] = useState(0);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -13,7 +15,7 @@ const Search = () => {
         setError('');
 
         try {
-            const results = await fetchUserData(query);
+            const results = await fetchUserData(username, location, minRepos);
             setUsers(results);
         } catch (error) {
             setError('Looks like we can’t find the user.');
@@ -27,9 +29,21 @@ const Search = () => {
             <form onSubmit={handleSearch}>
                 <input
                     type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter GitHub username"
+                />
+                <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="Enter location"
+                />
+                <input
+                    type="number"
+                    value={minRepos}
+                    onChange={(e) => setMinRepos(e.target.value)}
+                    placeholder="Minimum repositories"
                 />
                 <button type="submit">Search</button>
             </form>
