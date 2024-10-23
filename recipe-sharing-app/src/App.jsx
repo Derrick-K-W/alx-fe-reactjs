@@ -1,9 +1,11 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  // Import Router and Routes
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RecipeList from './components/RecipeList';
 import AddRecipeForm from './components/AddRecipeForm';
 import SearchBar from './components/SearchBar';
-import RecipeDetails from './components/RecipeDetails';  // Assuming you have a RecipeDetails component
+import RecipeDetails from './components/RecipeDetails';
+import FavoritesList from './components/FavoritesList';
+import RecommendationsList from './components/RecommendationsList';
 
 function App() {
   return (
@@ -12,12 +14,15 @@ function App() {
         <h1>Recipe Sharing App</h1>
         <SearchBar />
         <AddRecipeForm />
-        
-        {/* Define Routes for the application */}
+
         <Routes>
-          <Route path="/" element={<RecipeList />} />  {/* Route for RecipeList */}
-          <Route path="/recipes/:id" element={<RecipeDetails />} />  {/* Route for RecipeDetails */}
+          <Route path="/" element={<RecipeList />} />
+          <Route path="/recipes/:id" element={<RecipeDetails />} />
         </Routes>
+
+        {/* Integrating the favorites and recommendations sections */}
+        <FavoritesList />
+        <RecommendationsList />
       </div>
     </Router>
   );
