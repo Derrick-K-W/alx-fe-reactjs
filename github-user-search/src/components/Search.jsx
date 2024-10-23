@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 const Search = ({ onSearch }) => {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(''); // Handles input state
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username.trim() !== '') {
-      onSearch(username); // Pass the entered username to the parent component
+      onSearch(username); // Call the function passed as a prop to handle API request
     }
   };
 

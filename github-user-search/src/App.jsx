@@ -4,22 +4,22 @@ import Search from './components/Search';
 import { fetchUserData } from './services/githubService';
 
 function App() {
-  const [user, setUser] = useState(null); // State to hold user data
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [user, setUser] = useState(null); // Holds the GitHub user data
+  const [loading, setLoading] = useState(false); // Handles loading state
+  const [error, setError] = useState(null); // Handles error state
 
   const handleSearch = async (username) => {
-    setLoading(true); // Start loading
-    setError(null);   // Reset errors
-    setUser(null);    // Reset user data
+    setLoading(true); // Start loading when search starts
+    setError(null); // Clear any previous errors
+    setUser(null); // Clear previous user data
 
     try {
-      const data = await fetchUserData(username);
-      setUser(data); // Set the user data on success
+      const data = await fetchUserData(username); // Call the API function
+      setUser(data); // Set the user data once the request is successful
     } catch (err) {
-      setError('Looks like we can’t find the user'); // Handle the error
+      setError('Looks like we can’t find the user'); // Set error message
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); // End the loading state
     }
   };
 
@@ -30,10 +30,10 @@ function App() {
       {/* Search component */}
       <Search onSearch={handleSearch} />
 
-      {/* Conditional rendering for loading, error, or user data */}
-      <div className="user-results">
-        {loading && <p>Loading...</p>} {/* Show while loading */}
-        {error && <p className="text-red-500">{error}</p>} {/* Show if error */}
+      {/* Conditional rendering based on the loading, error, or user data */}
+      <div className="user-results mt-6">
+        {loading && <p>Loading...</p>} {/* Loading state */}
+        {error && <p className="text-red-500">{error}</p>} {/* Error message */}
         {user && (
           <div className="border p-4 rounded shadow-lg">
             <img
