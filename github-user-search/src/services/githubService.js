@@ -23,6 +23,7 @@ export const fetchUserData = async (username, location = '', minRepos = 0) => {
             query += `+repos:>${minRepos}`;
         }
 
+        // Ensure the endpoint is included as required
         const response = await axios.get(`${GITHUB_API_URL}?q=${query}`);
         return response.data.items; // Return the list of users
     } catch (error) {
