@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
-import { fetchUserData } from '../services/githubService';
+import React, { useState, useEffect } from 'react';
+import githubService from '../services/githubService';
 
 const Search = () => {
-    const [username, setUsername] = useState('');
-    const [location, setLocation] = useState('');
-    const [minRepos, setMinRepos] = useState(0);
-    const [users, setUsers] = useState([]);
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
+    // Debounced search function
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (query) {
+                fetchUserData(query);
+            }
+        }, 300); // Adjust the debounce time as necessary
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [query]);
+
+    const fetchUserData = async (searchTerm) => {
         setLoading(true);
         setError('');
-
         try {
-            const results = await fetchUserData(username, location, minRepos);
-            setUsers(results);
-        } catch (error) {
-            setError('Looks like we can’t find the user.');
+            const data = await githubService.fetchUserData(searchTerm);
+            setResults(data);
+        } catch (err) {
+            setError('Looks like we can’t find the user');
         } finally {
             setLoading(false);
         }
@@ -26,41 +35,24 @@ const Search = () => {
 
     return (
         <div>
-            <form onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter GitHub username"
-                />
-                <input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    placeholder="Enter location"
-                />
-                <input
-                    type="number"
-                    value={minRepos}
-                    onChange={(e) => setMinRepos(e.target.value)}
-                    placeholder="Minimum repositories"
-                />
-                <button type="submit">Search</button>
-            </form>
-
+            <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search GitHub users..."
+                className="border rounded p-2"
+            />
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-
-            <ul>
-                {users.map((user) => (
-                    <li key={user.id}>
-                        <img src={user.avatar_url} alt={user.login} width="50" />
-                        <a href={user.html_url} target="_blank" rel="noopener noreferrer">
-                            {user.login}
-                        </a>
-                    </li>
+            <div>
+                {results.map(user => (
+                    <div key={user.id}>
+                        <img src={user.avatar_url} alt={user.login} className="rounded-full w-10 h-10" />
+                        <p>{user.login}</p>
+                        <a href={user.html_url} target="_blank" rel="noopener noreferrer">Profile</a>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

@@ -1,14 +1,20 @@
-import React from 'react';
-import './App.css';
-import Search from './components/Search';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+const Search = lazy(() => import('./components/Search'));
+const OtherComponent = lazy(() => import('./components/OtherComponent')); // Example of another component
 
 function App() {
-  return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">GitHub User Search</h1>
-      <Search /> {/* Directly use the Search component */}
-    </div>
-  );
+    return (
+        <Router>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                    <Route path="/" element={<Search />} />
+                    <Route path="/other" element={<OtherComponent />} />
+                </Routes>
+            </Suspense>
+        </Router>
+    );
 }
 
 export default App;
